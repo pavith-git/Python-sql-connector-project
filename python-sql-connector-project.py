@@ -1,6 +1,6 @@
 from tabulate import tabulate
 import mysql.connector
-con=mysql.connector.connect(host="localhost",user="root",password="6669",database="python_db")
+con=mysql.connector.connect(host="localhost",user="root",password="****",database="python_db")  #Enter the database created in Mysql
 
 def insert(name,age,city):
     res=con.cursor()
