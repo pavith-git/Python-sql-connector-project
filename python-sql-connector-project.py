@@ -1,41 +1,42 @@
 from tabulate import tabulate
 import mysql.connector
-con=mysql.connector.connect(host="localhost",user="root",password="****",database="python_db")  #Enter the database created in Mysql
 
-def insert(name,age,city):
-    res=con.cursor()
-    sql="insert into users (name,age,city) values(%s,%s,%s)"
-    user=(name,age,city)
-    res.execute(sql,user)
-    con.commit()
-    print("Data Insert Success")
+class Database:
+    def __init__(self, host, user, password, database):
+        self.con = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="****",
+            database="python_db"
+        )
+        self.cursor = self.con.cursor()
 
+    def insert(self, name, age, city):
+        sql = "INSERT INTO users (name, age, city) VALUES (%s, %s, %s)"
+        self.cursor.execute(sql, (name, age, city))
+        self.con.commit()
+        print("Data Insert Success")
 
-def update(name, age, city, id):
-    res=con.cursor()
-    sql="update users set name=%s,age=%s,city=%s where id=%s"
-    user=(name,age,city,id)                                        
-    res.execute(sql,user)
-    con.commit()
-    print("Data Update Success")
+    def update(self, id, name, age, city):
+        sql = "UPDATE users SET name=%s, age=%s, city=%s WHERE id=%s"
+        self.cursor.execute(sql, (name, age, city, id))
+        self.con.commit()
+        print("Data Update Success")
 
+    def select(self):
+        sql = "SELECT ID, NAME, AGE, CITY FROM users"
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        print(tabulate(result, headers=["ID", "NAME", "AGE", "CITY"]))
 
-def select():
-    res=con.cursor() ##it is a connector between python and sql
-    sql="SELECT ID,NAME,AGE,CITY from users"
-    res.execute(sql)
-   # result=res.fetchone(); it will return top most result(only one)
-   # result=res.fetchmany(2); it will resturn what we provided
-    result =res.fetchall();   #it will return all the data
-    print(tabulate(result,headers=["ID","NAME","AGE","CITY"]))  #we intalled tabulate
-    
-def delete(id):
-    res=con.cursor()
-    sql="delete from users where id=%s"
-    user=(id,)                                        
-    res.execute(sql,user)
-    con.commit()
-    print("Data Delete Success")
+    def delete(self, id):
+        sql = "DELETE FROM users WHERE id=%s"
+        self.cursor.execute(sql, (id,))
+        self.con.commit()
+        print("Data Delete Success")
+
+# Using the class
+db = Database(host="localhost", user="root", password="6669", database="python_db")
 
 while True:
     print("1. Insert Data")
@@ -43,34 +44,34 @@ while True:
     print("3. Select Data")
     print("4. Delete Data")
     print("5. Exit")
-    
-    choice=int(input("Enter Your Choice: "))
-    if choice==1:
-        name=input("Enter Name: ")
-        age=input("Enter Age: ")
-        city=input("Enter City ")
-        insert(name, age, city)
-        
-    elif choice==2:
-        id=input("Enter the ID You Want to Update: ")
-        name=input("Enter Name: ")
-        age=input("Enter Age: ")
-        city=input("Enter City: ")
-        update(name, age, city, id)
-        
-    elif choice==3:
-        select()
-        
-    elif choice==4:
-        id=input("Enter the ID to Delete: ")
-        delete(id)
-        
-    elif choice==5:
+
+    choice = int(input("Enter Your Choice: "))
+    if choice == 1:
+        name = input("Enter Name: ")
+        age = input("Enter Age: ")
+        city = input("Enter City: ")
+        db.insert(name, age, city)
+
+    elif choice == 2:
+        id = input("Enter the ID You Want to Update: ")
+        name = input("Enter Name: ")
+        age = input("Enter Age: ")
+        city = input("Enter City: ")
+        db.update(id, name, age, city)
+
+    elif choice == 3:
+        db.select()
+
+    elif choice == 4:
+        id = input("Enter the ID to Delete: ")
+        db.delete(id)
+
+    elif choice == 5:
         exit()
-        
+
     else:
         print("Invalid Selection, Please Try Again!")
-    
+
         
         
         
