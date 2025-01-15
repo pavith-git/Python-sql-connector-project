@@ -1,4 +1,9 @@
+import sys
 import pytest
+
+# Add the directory containing python_sql_connector_project.py to the Python path
+sys.path.append('/c:/Users/Pavithran/Desktop/github/Python-sql-connector-project')
+
 from python_sql_connector_project import Database
 
 @pytest.fixture
